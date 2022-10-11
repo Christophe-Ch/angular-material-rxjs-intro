@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { LoadDataComponent } from './load-data/load-data.component';
 import { EditEntriesComponent } from './edit-entries/edit-entries.component';
@@ -49,7 +50,8 @@ import { NotDeletedPipe } from './not-deleted.pipe';
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatPaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

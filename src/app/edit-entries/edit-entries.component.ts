@@ -1,24 +1,33 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { DataService, Mock, Status } from '../data.service';
 import { EditMockDialogComponent } from '../edit-mock-dialog/edit-mock-dialog.component';
 import { AddMockDialogComponent } from '../add-mock-dialog/add-mock-dialog.component';
-import { MatTable } from '@angular/material/table';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-edit-entries',
   templateUrl: './edit-entries.component.html',
   styleUrls: ['./edit-entries.component.css']
 })
-export class EditEntriesComponent {
+export class EditEntriesComponent implements AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'createdAt', 'actions']
-  // data: Mock[] = [];
+  tableSource = new MatTableDataSource<Mock>([]);
   @Output() reset = new EventEmitter();
   @Output() stepComplete = new EventEmitter();
   @ViewChild(MatTable) table!: MatTable<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private dialog: MatDialog, public dataService: DataService) { }
+  constructor(private dialog: MatDialog, public dataService: DataService) {
+    this.dataService.data.subscribe({
+      next: (data) => this.tableSource.data = data.filter(entry => entry.status !== Status.DELETED)
+    })
+  }
+
+  ngAfterViewInit(): void {
+    this.tableSource.paginator = this.paginator;
+  }
 
   onClickEdit(entry: Mock) {
     const dialogRef = this.dialog.open(EditMockDialogComponent, {

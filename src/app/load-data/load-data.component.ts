@@ -1,6 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DataService, Mock, Status } from '../data.service';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-load-data',
@@ -13,7 +12,7 @@ export class LoadDataComponent {
   constructor(private dataService: DataService) { }
 
   loadData() {
-    this.dataService.load().add(() => this.stepComplete.emit());
+    this.dataService.load(() => this.stepComplete.emit());
   }
 
 }

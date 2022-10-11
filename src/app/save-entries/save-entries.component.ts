@@ -1,6 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { DataService, Mock, Status } from '../data.service';
 
 @Component({
@@ -12,7 +10,7 @@ export class SaveEntriesComponent {
   data: Mock[] = [];
   logs: string[] = [];
 
-  constructor(private dataService: DataService, private snackBar: MatSnackBar) {
+  constructor(private dataService: DataService) {
     this.dataService.dataSubject.subscribe({
       next: (data) => this.data = data
     })
@@ -22,26 +20,17 @@ export class SaveEntriesComponent {
     this.data.forEach(entry => {
       if (entry.status === Status.UNCHANGED) return;
 
-      (<Observable<Mock>>this.dataService.save(entry)).subscribe({
-        next: () => {
-          switch (entry.status) {
-            case Status.NEW:
-              this.logs = [...this.logs, `✨ ${entry.name} added!`];
-              break;
-            case Status.CHANGED:
-              this.logs = [...this.logs, `♻️ ${entry.name} updated!`];
-              break;
-            case Status.DELETED:
-              this.logs = [...this.logs, `🗑 ${entry.name} deleted!`];
-              break;
-          }
-        },
-        error: () => {
-          this.snackBar.open('An error occured while fetching data, please try again later.', '', {
-            horizontalPosition: 'end',
-            verticalPosition: 'top',
-            duration: 5000
-          })
+      this.dataService.save(entry, () => {
+        switch (entry.status) {
+          case Status.NEW:
+            this.logs = [...this.logs, `✨ ${entry.name} added!`];
+            break;
+          case Status.CHANGED:
+            this.logs = [...this.logs, `♻️ ${entry.name} updated!`];
+            break;
+          case Status.DELETED:
+            this.logs = [...this.logs, `🗑 ${entry.name} deleted!`];
+            break;
         }
       });
     });

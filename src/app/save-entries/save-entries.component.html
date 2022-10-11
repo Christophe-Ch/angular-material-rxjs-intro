@@ -2,8 +2,8 @@
 <button mat-flat-button color="primary" (click)="save()">
     Save
 </button>
-<div>
-    <div *ngFor="let log of logs">
+<div class="logs">
+    <div *ngFor="let log of logs.reverse()">
         <p>{{ log }}</p>
     </div>
 </div>

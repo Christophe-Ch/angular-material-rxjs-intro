@@ -19,6 +19,7 @@ export class SaveEntriesComponent {
 
   save() {
     this.logs = [];
+    
     const subjects: Subject<unknown>[] = [];
 
     this.data.forEach(entry => {

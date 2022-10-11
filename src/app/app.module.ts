@@ -18,13 +18,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTreeModule } from '@angular/material/tree';
 
 import { LoadDataComponent } from './load-data/load-data.component';
 import { EditEntriesComponent } from './edit-entries/edit-entries.component';
 import { EditMockDialogComponent } from './edit-mock-dialog/edit-mock-dialog.component';
 import { AddMockDialogComponent } from './add-mock-dialog/add-mock-dialog.component';
 import { SaveEntriesComponent } from './save-entries/save-entries.component';
-import { NotDeletedPipe } from './not-deleted.pipe';
 
 @NgModule({
   declarations: [
@@ -33,8 +33,7 @@ import { NotDeletedPipe } from './not-deleted.pipe';
     EditEntriesComponent,
     EditMockDialogComponent,
     AddMockDialogComponent,
-    SaveEntriesComponent,
-    NotDeletedPipe
+    SaveEntriesComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +50,8 @@ import { NotDeletedPipe } from './not-deleted.pipe';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatTreeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

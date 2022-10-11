@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, NEVER, noop, Subject, Subscription } from 'rxjs';
 
 export enum Status {
   NEW,
@@ -57,7 +57,8 @@ export class DataService {
     ));
   }
 
-  save(mock: Mock, callback: () => void): Subscription | void {
+  save(mock: Mock): Subject<unknown> {
+    let subject = new Subject();
     let observable;
     
     switch (mock.status) {
@@ -72,12 +73,12 @@ export class DataService {
         break;
     }
 
-    if (!observable) return;
-
-    return observable.subscribe({ 
-      next: () => callback(),
-      error: () => this.onError() 
+    subject.subscribe({
+      error: () => this.onError()
     });
+    observable?.subscribe(subject);
+
+    return subject;
   }
 
   private onError() {

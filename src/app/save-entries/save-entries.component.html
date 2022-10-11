@@ -1,0 +1,9 @@
+<p>Last but not least, let's save our data.</p>
+<button mat-flat-button color="primary" (click)="save()">
+    Save
+</button>
+<div>
+    <div *ngFor="let log of logs">
+        <p>{{ log }}</p>
+    </div>
+</div>

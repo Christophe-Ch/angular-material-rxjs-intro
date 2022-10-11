@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Add an entry</h1>
+<div mat-dialog-content>
+    <mat-form-field appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput [(ngModel)]="entry.name" required #name="ngModel">
+        <mat-error *ngIf="name.invalid">Name is invalid.</mat-error>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onClickClose()">Cancel</button>
+    <button mat-flat-button color="primary" [mat-dialog-close]="entry" [disabled]="name.invalid">Save</button>
+</div>

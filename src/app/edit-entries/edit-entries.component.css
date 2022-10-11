@@ -1,0 +1,13 @@
+table {
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.actions button:first-child {
+    margin-right: 1rem;
+}

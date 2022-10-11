@@ -1,14 +1,14 @@
 <mat-stepper orientation="vertical" linear #stepper>
   <mat-step [editable]="false">
     <ng-template matStepLabel>📦 Loading data</ng-template>
-    <app-load-data [(data)]="data" (stepComplete)="onStepComplete()"></app-load-data>
+    <app-load-data (stepComplete)="onStepComplete()"></app-load-data>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>✏️ Edit entries</ng-template>
-    <app-edit-entries [(data)]="data" (reset)="reset()" (stepComplete)="onStepComplete()"></app-edit-entries>
+    <app-edit-entries (reset)="reset()" (stepComplete)="onStepComplete()"></app-edit-entries>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>💾 Save entries</ng-template>
-    <app-save-entries [data]="data"></app-save-entries>
+    <app-save-entries></app-save-entries>
   </mat-step>
 </mat-stepper>

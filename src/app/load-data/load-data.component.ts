@@ -8,26 +8,12 @@ import { DataService, Mock, Status } from '../data.service';
   styleUrls: ['./load-data.component.css']
 })
 export class LoadDataComponent {
-  @Input() data!: Mock[];
-  @Output() dataChange = new EventEmitter<Mock[]>();
   @Output() stepComplete = new EventEmitter();
 
-  constructor(private dataService: DataService, private snackBar: MatSnackBar) { }
+  constructor(private dataService: DataService) { }
 
   loadData() {
-    this.dataService.load().subscribe({
-      next: (result) => {
-        this.dataChange.emit(result.map(entry => ({ ...entry, status: Status.UNCHANGED })));
-        this.stepComplete.emit();
-      },
-      error: () => {
-        this.snackBar.open('An error occured while fetching data, please try again later.', '', {
-          horizontalPosition: 'end',
-          verticalPosition: 'top',
-          duration: 5000
-        })
-      }
-    });
+    this.dataService.load().add(() => this.stepComplete.emit());
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { Mock } from './data.service';
+import { DataService, Mock } from './data.service';
 
 @Component({
   selector: 'app-root',
@@ -10,17 +10,15 @@ import { Mock } from './data.service';
 export class AppComponent {
   title = 'hello-material';
 
-  data: Mock[] = [];
-  dataBackup: Mock[] = [];
-
   @ViewChild('stepper') private stepper!: MatStepper;
 
+  constructor(private dataService: DataService) { }
+
   onStepComplete() {
-    this.dataBackup = this.data.map(entry => structuredClone(entry));
     this.stepper.next();
   }
 
   reset() {
-    this.data = this.dataBackup.map(entry => structuredClone(entry));
+    this.dataService.load();
   }
 }

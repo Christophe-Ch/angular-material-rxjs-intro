@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { combineLatest, combineLatestWith, forkJoin, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { DataService, Mock, Status } from '../data.service';
 
 @Component({
@@ -9,10 +9,14 @@ import { DataService, Mock, Status } from '../data.service';
   styleUrls: ['./save-entries.component.css']
 })
 export class SaveEntriesComponent {
-  @Input() data!: Mock[];
+  data: Mock[] = [];
   logs: string[] = [];
 
-  constructor(private dataService: DataService, private snackBar: MatSnackBar) { }
+  constructor(private dataService: DataService, private snackBar: MatSnackBar) {
+    this.dataService.dataSubject.subscribe({
+      next: (data) => this.data = data
+    })
+  }
 
   save() {
     this.data.forEach(entry => {

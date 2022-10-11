@@ -23,14 +23,15 @@ export class Mock {
 export class DataService {
   static ENDPOINT_URL = 'https://633dfa8283f50e9ba3a9fc10.mockapi.io/Mock';
 
-  dataSubject = new BehaviorSubject<Mock[]>([]);
+  private _data = new BehaviorSubject<Mock[]>([]);
+  data = this._data.asObservable();
 
   constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) { }
 
   load(callback?: () => void): void {
     this.httpClient.get<Mock[]>(DataService.ENDPOINT_URL).subscribe({
       next: (result) => {
-        this.dataSubject.next(
+        this._data.next(
           result.map(entry => ({ ...entry, status: Status.UNCHANGED }))
         );
 
@@ -38,6 +39,22 @@ export class DataService {
       },
       error: () => this.onError()
     });
+  }
+
+  add(mock: Mock) {
+    this._data.next([...this._data.getValue(), mock]);
+  }
+
+  remove(id: number) {
+    this._data.next(
+      this._data.getValue().map(entry => {
+        if (entry.id === id) {
+          entry.status = Status.DELETED;
+        }
+
+        return entry;
+      }
+    ));
   }
 
   save(mock: Mock, callback: () => void): Subscription | void {

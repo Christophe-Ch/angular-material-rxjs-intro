@@ -13,16 +13,12 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class EditEntriesComponent {
   displayedColumns: string[] = ['id', 'name', 'createdAt', 'actions']
-  data: Mock[] = [];
+  // data: Mock[] = [];
   @Output() reset = new EventEmitter();
   @Output() stepComplete = new EventEmitter();
   @ViewChild(MatTable) table!: MatTable<any>;
 
-  constructor(private dialog: MatDialog, private dataService: DataService) {
-    this.dataService.dataSubject.subscribe({
-      next: (data) => this.data = data
-    })
-  }
+  constructor(private dialog: MatDialog, public dataService: DataService) { }
 
   onClickEdit(entry: Mock) {
     const dialogRef = this.dialog.open(EditMockDialogComponent, {
@@ -43,18 +39,12 @@ export class EditEntriesComponent {
     dialogRef.afterClosed().subscribe((result: Mock) => {
       if (!result) return;
 
-      this.dataService.dataSubject.next([...this.data, result]);
+      this.dataService.add(result);
     });
   }
 
   onClickDelete(id: number) {
-    this.dataService.dataSubject.next(this.data.map(entry => {
-      if (entry.id === id) {
-        entry.status = Status.DELETED;
-      }
-
-      return entry;
-    }));
+    this.dataService.remove(id);
   }
 
   onClickReset() {
@@ -63,12 +53,5 @@ export class EditEntriesComponent {
 
   onClickContinue() {
     this.stepComplete.emit();
-  }
-
-  onListDrop(event: CdkDragDrop<Mock[]>) {
-    const newData = this.data.map(entry => structuredClone(entry));
-    moveItemInArray(newData, event.previousIndex, event.currentIndex);
-    
-    this.dataService.dataSubject.next(newData);
   }
 }

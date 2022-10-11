@@ -11,7 +11,7 @@ export class SaveEntriesComponent {
   logs: string[] = [];
 
   constructor(private dataService: DataService) {
-    this.dataService.dataSubject.subscribe({
+    this.dataService.data.subscribe({
       next: (data) => this.data = data
     })
   }

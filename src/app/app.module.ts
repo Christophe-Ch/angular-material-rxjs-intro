@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -25,6 +25,8 @@ import { EditEntriesComponent } from './edit-entries/edit-entries.component';
 import { EditMockDialogComponent } from './edit-mock-dialog/edit-mock-dialog.component';
 import { AddMockDialogComponent } from './add-mock-dialog/add-mock-dialog.component';
 import { SaveEntriesComponent } from './save-entries/save-entries.component';
+import { BaseDataService, DataService, MockDataService } from './data.service';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { SaveEntriesComponent } from './save-entries/save-entries.component';
     MatPaginatorModule,
     MatTreeModule
   ],
-  providers: [],
+  providers: [
+    { provide: BaseDataService, useClass: environment.useMock ? MockDataService : DataService }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

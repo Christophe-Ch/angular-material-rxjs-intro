@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { DataService, Mock } from './data.service';
+import { BaseDataService, DataService, Mock } from './data.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ export class AppComponent {
 
   @ViewChild('stepper') private stepper!: MatStepper;
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: BaseDataService) { }
 
   onStepComplete() {
     this.stepper.next();

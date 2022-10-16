@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { forkJoin, Subject } from 'rxjs';
-import { DataService, Mock, Status } from '../data.service';
+import { BaseDataService, DataService, Mock, Status } from '../data.service';
 
 @Component({
   selector: 'app-save-entries',
@@ -11,7 +11,7 @@ export class SaveEntriesComponent {
   data: Mock[] = [];
   logs: string[] = [];
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: BaseDataService) {
     this.dataService.data.subscribe({
       next: (data) => this.data = data
     })

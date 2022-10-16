@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, NEVER, noop, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export enum Status {
   NEW,
@@ -17,16 +18,21 @@ export class Mock {
   status!: Status;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class DataService {
-  static ENDPOINT_URL = 'https://633dfa8283f50e9ba3a9fc10.mockapi.io/Mock';
-
-  private _data = new BehaviorSubject<Mock[]>([]);
+export abstract class BaseDataService {
+  protected _data = new BehaviorSubject<Mock[]>([]);
   data = this._data.asObservable();
 
-  constructor(private httpClient: HttpClient, private snackBar: MatSnackBar) { }
+  abstract load(callback?: () => void): void;
+  abstract add(mock: Mock): void;
+  abstract remove(id: number): void;
+  abstract save(mock: Mock): Subject<unknown>;
+}
+
+@Injectable()
+export class DataService extends BaseDataService {
+  static ENDPOINT_URL = 'https://633dfa8283f50e9ba3a9fc10.mockapi.io/Mock';
+
+  constructor (protected httpClient: HttpClient, protected snackBar: MatSnackBar) { super(); }
 
   load(callback?: () => void): void {
     this.httpClient.get<Mock[]>(DataService.ENDPOINT_URL).subscribe({
@@ -41,11 +47,11 @@ export class DataService {
     });
   }
 
-  add(mock: Mock) {
+  add(mock: Mock): void {
     this._data.next([...this._data.getValue(), mock]);
   }
 
-  remove(id: number) {
+  remove(id: number): void {
     this._data.next(
       this._data.getValue().map(entry => {
         if (entry.id === id) {
@@ -88,4 +94,40 @@ export class DataService {
       duration: 5000
     })
   }
+}
+
+@Injectable()
+export class MockDataService extends BaseDataService {
+  load(callback?: (() => void) | undefined): void {
+    this._data.next([
+      { id: 1, name: 'First', createdAt: new Date(), status: Status.UNCHANGED },
+      { id: 2, name: 'Second', createdAt: new Date(), status: Status.UNCHANGED },
+    ]);
+
+    if (callback) callback();
+  }
+
+  add(mock: Mock): void {
+    this._data.next([...this._data.getValue(), { ...mock, name: `${mock.name} (mock)`}]);
+  }
+
+  remove(id: number): void {
+    this._data.next(
+      this._data.getValue().map(entry => {
+        if (entry.id === id) {
+          entry.status = Status.DELETED;
+        }
+
+        return entry;
+      }
+    ));
+  }
+
+  save(mock: Mock): Subject<unknown> {
+    let observable = from([true]);
+    let subject = new Subject();
+    observable.subscribe(subject);
+    return subject;
+  }
+  
 }

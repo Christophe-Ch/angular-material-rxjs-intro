@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { DataService } from '../data.service';
+import { BaseDataService, DataService } from '../data.service';
 
 @Component({
   selector: 'app-load-data',
@@ -9,7 +9,7 @@ import { DataService } from '../data.service';
 export class LoadDataComponent {
   @Output() stepComplete = new EventEmitter();
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: BaseDataService) { }
 
   loadData() {
     this.dataService.load(() => this.stepComplete.emit());

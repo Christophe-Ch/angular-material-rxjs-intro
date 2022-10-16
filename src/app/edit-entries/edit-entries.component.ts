@@ -1,6 +1,6 @@
 import { MatDialog } from '@angular/material/dialog';
 import { AfterViewInit, Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { DataService, Mock, Status } from '../data.service';
+import { BaseDataService, DataService, Mock, Status } from '../data.service';
 import { EditMockDialogComponent } from '../edit-mock-dialog/edit-mock-dialog.component';
 import { AddMockDialogComponent } from '../add-mock-dialog/add-mock-dialog.component';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
@@ -19,7 +19,7 @@ export class EditEntriesComponent implements AfterViewInit {
   @ViewChild(MatTable) table!: MatTable<any>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private dialog: MatDialog, public dataService: DataService) {
+  constructor(private dialog: MatDialog, public dataService: BaseDataService) {
     this.dataService.data.subscribe({
       next: (data) => this.tableSource.data = data.filter(entry => entry.status !== Status.DELETED)
     })
